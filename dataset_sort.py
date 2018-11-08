@@ -2,6 +2,12 @@
 Iterate train dataset folder to create dataset folders by dog breed names. 
 Each 32 bit UUID file name have a equivalent reference name (dog breed) name in labels.csv file.
 """
+
+import sys
+import os
+import pandas as pd
+import numpy as np
+
 def organise_dataset(root_path,):
     dataset_path = root_path+'/dataset'
     train_data = root_path+'/train/'
@@ -18,3 +24,5 @@ def organise_dataset(root_path,):
         # Moving files from source (train folder) to detination folder under each breed
         os.rename(source, destination)
     print("Dataset folders successfully created by breed name and copied all images in corresponding folders")
+
+organise_dataset(sys.argv[1])
