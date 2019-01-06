@@ -1,0 +1,35 @@
+server {
+    server_name  www.projekt.telemir.de;
+    listen 80;
+    listen [::]:80; ## listen for ipv6
+    return 301 http://projekt.telemir.de$request_uri;    
+}
+
+server {
+	server_name projekt.telemir.de;
+	listen 80;
+	listen [::]:80; 	
+	include acme;
+	# Redirect all HTTP requests to HTTPS with a 301 Moved Permanently response.
+    	location / {
+		return 301 https://$host$request_uri;
+	}
+}
+
+# HTTPS server
+server {
+	server_name projekt.telemir.de;
+	listen 443 ssl http2;
+    	listen [::]:443 ssl http2; 
+
+	ssl_certificate /etc/letsencrypt/live/mail.linux-duesseldorf.de/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/mail.linux-duesseldorf.de/privkey.pem;
+    	ssl_trusted_certificate /etc/letsencrypt/live/mail.linux-duesseldorf.de/chain.pem;
+
+	ssl_session_timeout 120m;
+
+	location / {
+		ssi on;
+		proxy_pass http://localhost:32769/;
+	}
+}
